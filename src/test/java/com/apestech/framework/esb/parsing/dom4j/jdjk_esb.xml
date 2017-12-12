@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+
+    <chain id="ts.jd.order" description="京东订单处理" concurrency="false" log="false">
+        <processor component="jsonToMapConvertor"/>
+        <action component="jdJk" method="down" parameterType="java.util.Map"/>
+        <producer topic="ts.jd.order.down" description="京东订单下载"/>
+        <consumer topic="ts.jd.order.down">
+            <action component="jdJk" method="getOrders"/>
+            <processor component="splitter"/>
+            <producer topic="ts.jd.order" description="京东订单"/>
+            <action component="jdJk" method="request" parameterType="java.util.Map"/>
+        </consumer>
+        <consumer topic="ts.jd.order" transaction="scm" period="90">
+            <processor component="jsonToMapConvertor"/>
+            <action component="jdJk" method="handleData" parameterType="java.util.Map"/>
+            <router>
+                <if condition="(order_state in('WAIT_SELLER_STOCK_OUT')) &amp;&amp; (valid=='1')"> <!--交易成功  ,'WAIT_GOODS_RECEIVE_CONFIRM','FINISHED_L'-->
+                    <processor component="mapMappingConvertor" configKey="ts.jdsc.lsd"/>
+                    <action component="BFLSJK" method="check" parameterType="java.util.Map"/>
+                    <action component="BFLSJK" method="save" parameterType="java.util.Map"/>
+                    <producer topic="ts.jd.deliver" description="京东订单出库"/>
+                    <producer topic="ts.jd.invoice.send" description="京东订单：发票短信"/>
+                </if>
+                <if condition="order_state=='LOCKED'"> <!--已锁定-->
+                    <action component="jdJk" method="lock" parameterType="java.util.Map"/>
+                </if>
+                <if condition="order_state=='TRADE_CANCELED'"> <!--取消: 即订单删除；触发事件为删单及拒收（删单包括用户、商家、客服的删单，拒收是指用户拒收）-->
+                    <!--<action component="jdJk" method="fail" parameterType="java.util.Map"/>-->
+                    <processor component="logProcessor"/>
+                </if>
+                <if condition="(!(order_state in('WAIT_SELLER_STOCK_OUT','LOCKED','TRADE_CANCELED'))) || (valid=='0')"> <!--过滤消息 ,'WAIT_GOODS_RECEIVE_CONFIRM','FINISHED_L'-->
+                    <processor component="logProcessor"/>
+                </if>
+            </router>
+        </consumer>
+        <consumer topic="ts.jd.deliver" period="5">
+            <processor component="jsonToMapConvertor"/>
+            <action component="jdJk" method="deliver" parameterType="java.util.Map"/>
+            <router>
+                <if condition="valid=='1'">
+                    <processor component="httpClientTransportor" url="{{jd.url}}"/>
+                    <action component="jdJk" method="deliverResponse"/>
+                    <processor component="logProcessor"/>
+                </if>
+                <if condition="valid=='0'"> <!--过滤消息 -->
+                    <processor component="logProcessor"/>
+                </if>
+            </router>
+        </consumer>
+        <consumer topic="ts.jd.invoice.send" period="60">
+            <processor component="jsonToMapConvertor"/>
+            <action component="jdJk" method="assembleSMS" parameterType="java.util.Map"/>
+            <router>
+                <if condition="valid=='1'">
+                    <action component="tbJk" method="sendSMS" parameterType="java.util.Map"/>
+                    <processor component="httpWebServiceTransportor" url="{{sms.url}}"
+                               namespaceURI="http://tempuri.org/" method="MongateSendSubmit"/>
+                    <action component="tbJk" method="sendSMS_response" parameterType="java.util.Map"/>
+                </if>
+                <if condition="valid=='0'"> <!--过滤消息 -->
+                    <processor component="logProcessor"/>
+                </if>
+            </router>
+        </consumer>
+    </chain>
+
+    <chain id="ts.jd.refund.search" description="京东退款待审核单查询" concurrency="false" log="false">
+        <action component="jdJk" method="getRefunds"/>
+        <processor component="listToJsonArraryConvertor"/>
+    </chain>
+
+    <chain id="ts.jd.refund.check" description="京东退款单审核" concurrency="false" log="false">
+        <processor component="jsonToMapConvertor"/>
+        <processor component="mapMappingConvertor" configKey="ts.jd.refund.check"/>
+        <action component="jdJk" method="checkRefund" parameterType="java.util.Map"/>
+    </chain>
+
+</root>

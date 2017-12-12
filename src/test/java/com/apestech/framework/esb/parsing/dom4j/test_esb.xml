@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+
+    <chain id="ts.lsd.save" version="1.0" description="暴风商城零售单保存接口" concurrency="false" log="true" max_available="10" rate="0.5">
+        <processor component="logProcessor"/>
+        <processor component="jsonToMapConvertor"/>
+        <processor component="mapMappingConvertor" configKey="bf.conver.lsd"/>
+        <processor component="mapToJsonConvertor"/>
+        <!--<action component="testActionProcessor"/>-->
+        <!--<action component="testAction" method="test"/>-->
+        <!--<processor component="mapToJsonConvertor"/>-->
+        <processor component="jlHttpTransportor" paramName="data" url="{{v9}}/BFLSJK/saveLSD.do"/>
+        <processor component="logProcessor"/>
+    </chain>
+
+    <chain id="ts.pfd.save" version="1.0" description="暴风分销单保存接口" concurrency="true" log="true">
+        <!--<processor component="logProcessor"/>-->
+        <processor component="jsonToMapConvertor"/>
+        <processor component="mapMappingConvertor" configKey="bf.conver.lsd"/>
+        <!--<action component="testActionProcessor"/>-->
+        <processor component="mapToJsonConvertor"/>
+        <processor component="jlHttpTransportor" url="{{v9}}/BfJK/saveOrderN.do"/>
+        <!--<processor component="logProcessor"/>-->
+    </chain>
+
+    <chain id="subchain.test" version="1.0" description="接口嵌套调用" concurrency="true" log="true">
+        <subchain id="dhd.save" version="1.0"/>
+        <subchain id="dhd.check" version="1.0"/>
+    </chain>
+
+    <chain id="mq.test" version="1.0" description="MQ简单消息测试" concurrency="true" log="true" rate="0.1" max_available="1">
+        <processor component="jsonToMapConvertor"/>
+        <processor component="mapToJsonConvertor"/>
+        <producer topic="topic01" description="主题01"/>
+        <consumer topic="topic01" transaction="scm" backup="false" period="10">
+            <processor component="logProcessor"/>
+        </consumer>
+        <!--<processor component="mapToJsonConvertor"/>-->
+        <!--<producer topic="topic02" description="主题02"/>-->
+    </chain>
+
+    <consumer topic="topic02">
+        <processor component="logProcessor"/>
+        <action component="testAction" method="test"/>
+    </consumer>
+
+    <chain id="mq.test02" version="1.0" description="MQ消息多条消息分拆测试" concurrency="true" log="true">
+        <processor component="jsonToListConvertor"/>
+        <producer topic="topic03" description="消息不拆分"/>
+        <consumer topic="topic03">
+            <processor component="logProcessor"/>
+        </consumer>
+        <processor component="splitter"/>
+        <producer topic="topic04" description="消息拆分"/>
+        <consumer topic="topic04">
+            <processor component="logProcessor"/>
+        </consumer>
+    </chain>
+
+    <chain id="router.test" version="1.0" description="路由器测试" concurrency="false" log="false">
+        <processor component="logProcessor"/>
+        <router>
+            <if condition="DJLX=='LSD'">
+                <action component="testAction" method="lsd"/>
+                <!--<processor component="logProcessor"/>-->
+            </if>
+            <if condition="DJLX=='PFD'">
+                <action component="testAction" method="pfd"/>
+                <!--<processor component="logProcessor"/>-->
+            </if>
+            <other>
+                <processor component="logProcessor"/>
+            </other>
+        </router>
+        <processor component="logProcessor"/>
+    </chain>
+
+    <chain id="webservice.test" version="1.0" description="web服务调用测试" concurrency="true" log="true">
+        <action component="testAction" method="soap"/>
+        <processor component="httpWebServiceTransportor" url="{{LES_URL}}"
+                   namespaceURI="http://www.example.org/TransSOInfoFromJLToLES/" method="TransSOInfoFromJLToLES_OP"/>
+        <processor component="logProcessor"/>
+    </chain>
+
+    <chain id="webservice.test02" version="1.0" description="web服务调用测试" concurrency="true" log="true">
+        <processor component="httpWebServiceTransportor"
+                   url="http://www.webxml.com.cn/WebServices/WeatherWebService.asmx"
+                   namespaceURI="http://WebXml.com.cn/" method="getSupportProvince"/>
+        <processor component="logProcessor"/>
+    </chain>
+
+    <chain id="main.sendOnsMsg" version="1.0" description="重发Les数据" concurrency="true" log="true">
+        <processor component="jsonToMapConvertor"/>
+        <action component="main" method="sendOnsMsg" parameterType="java.util.Map"/>
+    </chain>
+
+    <chain id="main.dbTest" version="1.0" description="dbTest" concurrency="true" log="false">
+        <processor component="jsonToMapConvertor"/>
+        <action component="main" method="dbTest" parameterType="java.util.Map"/>
+    </chain>
+
+    <chain id="webservice.u8" version="1.0" description="web服务调用测试" concurrency="true" log="true">
+        <processor component="jsonToMapConvertor"/>
+        <processor component="httpWebServiceTransportor"
+                   url="http://180.166.22.210:8080/U8WebService/U8Service.asmx"
+                   namespaceURI="http://tempuri.org/" method="AccVouchInterface"/>
+        <processor component="logProcessor"/>
+    </chain>
+
+    <chain id="idempotent.test" version="1.0" description="幂等性" concurrency="true" log="false">
+        <processor component="jsonToMapConvertor"/>
+        <idempotent keys="key01;key02">
+            <processor component="logProcessor"/>
+        </idempotent>
+    </chain>
+
+</root>

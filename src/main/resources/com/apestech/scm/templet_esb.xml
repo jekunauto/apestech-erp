@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+
+    <chain method="demo.mapping" version="1.0" ignoreSign="true" isTransaction="true" description="Mapping调用">
+        <processor component="mapping" configKey="demo.action"/>
+    </chain>
+
+    <chain method="demo.router" version="1.0" ignoreSign="true" isTransaction="true" description="router调用">
+        <processor component="mapping" configKey="demo.action"/>
+        <router>
+            <if condition="DJLX=='LSD'">
+                <action component="userService" method="save"/>
+            </if>
+            <other>
+                <action component="userService" method="save"/>
+            </other>
+        </router>
+    </chain>
+
+    <chain method="demo.http" version="1.0" ignoreSign="true" isTransaction="true" description="Http调用">
+        <processor component="mapping" configKey="demo.action"/>
+        <processor component="http" url="{{jd.url}}"/>
+    </chain>
+
+    <chain method="demo.splitter" version="1.0" ignoreSign="true" isTransaction="true" description="splitter调用">
+        <processor component="mapping" configKey="demo.action"/>
+        <processor component="splitter">
+            <subchain method="demo.action" version="1.0"/>
+        </processor>
+    </chain>
+
+    <chain method="demo.action" version="1.0" ignoreSign="true" isTransaction="false" description="Action调用">
+        <action component="userService" method="save"/>
+    </chain>
+
+    <chain method="demo.subchain" version="1.0" ignoreSign="true" isTransaction="false" description="接口嵌套调用">
+        <subchain method="demo.action" version="1.0"/>
+    </chain>
+
+    <chain method="demo.mq" version="1.0" ignoreSign="true" isTransaction="false" description="MQ简单消息测试">
+        <processor component="mapping" configKey="demo.action"/>
+        <producer topic="demo.topic01" description="主题01"/>
+        <consumer topic="demo.topic01" isTransaction="true" isBackup="false" period="10">
+            <action component="userService" method="send"/>
+            <processor component="splitter">
+                <producer topic="demo.topic02" description="主题02"/>
+            </processor>
+        </consumer>
+    </chain>
+
+    <consumer topic="demo.topic02" isTransaction="true" isBackup="true" period="2">
+    </consumer>
+
+    <consumer topic="demo.topic04" isTransaction="true" isBackup="false" period="2">
+
+    </consumer>
+</root>
