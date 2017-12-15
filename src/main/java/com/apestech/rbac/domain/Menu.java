@@ -3,6 +3,7 @@ package com.apestech.rbac.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,9 +33,12 @@ public class Menu {
     private boolean valid; //有效
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "parent")
+    @JoinColumn(name = "parent_id")
     private Menu parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Menu> children;
+
+    @OneToMany(mappedBy="menu")
+    private List<Permission> permissions;
 }
