@@ -1,6 +1,6 @@
 package com.apestech.framework.mq;
 
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.SimpleRequest;
 import com.apestech.framework.esb.api.Request;
 import com.apestech.framework.esb.processor.Processor;
 import com.apestech.oap.RopRequestContext;
@@ -20,7 +20,7 @@ public class ConsumerAdapter {
 
     public boolean consume(Processor processor, MQEvent ropEvent, boolean isTransaction) {
         RopRequestContext context = new SimpleRopRequestContext(ropEvent.getRopContext());
-        Request message = new Request();
+        SimpleRequest message = new SimpleRequest();
         message.setRopRequestContext(context);
         message.setBody(ropEvent.getMessage().getBody());
         if (isTransaction) {
@@ -31,12 +31,12 @@ public class ConsumerAdapter {
     }
 
     @Transactional()
-    public boolean process(Processor processor, Message message) {
-        return invoke(processor, message);
+    public boolean process(Processor processor, Request request) {
+        return invoke(processor, request);
     }
 
-    private boolean invoke(Processor processor, Message message) {
-        processor.process(message);
+    private boolean invoke(Processor processor, Request request) {
+        processor.process(request);
         return true;
     }
 

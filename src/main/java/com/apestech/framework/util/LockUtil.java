@@ -31,9 +31,19 @@ public class LockUtil {
         return lock;
     }
 
-    public Lock getDistributedLock(String key){
+    public Lock getDistributedLock(String key) {
         key = "Lock_" + key;
+
         return hazelcastInstance.getLock(key);
+    }
+
+    public long getId(String name) {
+        return hazelcastInstance.getIdGenerator(name).newId();
+    }
+
+    public String getSessionId(){
+        long id = getId("session");
+        return MD5Util.encrypt("session_#_%_%_" + DateUtil.formatTime() + String.valueOf(id));
     }
 
 }

@@ -1,6 +1,6 @@
 package com.apestech.framework.esb.processor;
 
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 import com.apestech.oap.response.OapResponse;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * @author xul
  * @create 2017-12-04 13:41
  */
-public class ActionProcessor<T extends Message> extends AbstractChainProcessor<T> {
+public class ActionProcessor<T extends Request, R> extends AbstractChainProcessor<T, R> {
     private Object target;
     private Method method;
 
@@ -34,9 +34,9 @@ public class ActionProcessor<T extends Message> extends AbstractChainProcessor<T
     }
 
     @Override
-    protected void doProcess(T data) {
+    protected R doProcess(T data) {
         Object result;
-        Assert.isTrue(!(method.getParameterTypes().length > 1), target.getClass() + "." + getMethod().getName() + ": 方法无效。");
+        Assert.isTrue(!(method.getParameterTypes().length > 1), target.getClass() + "." + getMethod().getName() + ": 方法输入参数不合法。");
         if (method.getParameterTypes().length == 1) {
             result = ReflectionUtils.invokeMethod(method, target, data);
         } else {
@@ -51,7 +51,7 @@ public class ActionProcessor<T extends Message> extends AbstractChainProcessor<T
             }
             result = response.getBody();
         }
-        data.setData(result);
+        return (R) result;
     }
 
 }

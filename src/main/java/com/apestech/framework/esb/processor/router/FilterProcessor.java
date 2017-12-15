@@ -1,6 +1,6 @@
 package com.apestech.framework.esb.processor.router;
 
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 import com.apestech.framework.esb.processor.AbstractChainProcessor;
 import com.apestech.framework.util.CacheUtil;
 import com.apestech.framework.util.Tools;
@@ -14,7 +14,7 @@ import java.util.Map;
  * @author xul
  * @create 2017-12-05 8:55
  */
-public class FilterProcessor<T extends Message> extends AbstractChainProcessor<T> {
+public class FilterProcessor<T extends Request, R> extends AbstractChainProcessor<T, R> {
     private String condition;
 
     public String getCondition() {
@@ -29,7 +29,7 @@ public class FilterProcessor<T extends Message> extends AbstractChainProcessor<T
         Object o;
         try {
             condition = Tools.replace(condition);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         try {
@@ -48,7 +48,8 @@ public class FilterProcessor<T extends Message> extends AbstractChainProcessor<T
     }
 
     @Override
-    protected void doProcess(T data) {
+    protected R doProcess(T data) {
+        return null;
     }
 
 }

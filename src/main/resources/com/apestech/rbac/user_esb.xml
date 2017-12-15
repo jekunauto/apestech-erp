@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <chain method="user.login" version="1.0" ignoreSign="true" needInSession="false" isTransaction="true" description="Action调用">
+        <action component="userService" method="login"/>
+    </chain>
+</root>

@@ -6,4 +6,10 @@ public interface Cache<K, V> {
     void put(K key, V value);
 
     void remove(K key);
+
+    V get(String cache, K key);
+
+    void put(String cache, K key, V value);
+
+    void remove(String cache, K key);
 }

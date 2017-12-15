@@ -1,6 +1,6 @@
 package com.apestech.framework.esb.processor;
 
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 
 /**
  * 功能：消息消费者处理器类
@@ -8,10 +8,10 @@ import com.apestech.framework.esb.api.Message;
  * @author xul
  * @create 2017-12-07 18:06
  */
-public class ConsumerProcessor<T extends Message> extends AbstractChainProcessor<T> {
+public class ConsumerProcessor<T extends Request, R> extends AbstractChainProcessor<T, R> {
 
     @Override
-    protected void doProcess(T data) {
-
+    protected R doProcess(T data) {
+        return null;
     }
 }

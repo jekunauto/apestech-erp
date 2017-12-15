@@ -1,7 +1,7 @@
 package com.apestech.framework.esb.processor.router;
 
 import com.alibaba.fastjson.JSONObject;
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 import com.apestech.framework.esb.processor.AbstractChainProcessor;
 import com.apestech.framework.esb.processor.ChainProcessor;
 
@@ -15,7 +15,7 @@ import java.util.Map;
  * @author xul
  * @create 2017-12-04 18:46
  */
-public class RouterProcessor<T extends Message> extends AbstractChainProcessor<T> {
+public class RouterProcessor<T extends Request, R> extends AbstractChainProcessor<T, R> {
 
     private List<FilterProcessor> filters = new ArrayList();
     private FilterProcessor other = null;
@@ -29,9 +29,9 @@ public class RouterProcessor<T extends Message> extends AbstractChainProcessor<T
     }
 
     @Override
-    protected void doProcess(T data) {
+    protected R doProcess(T data) {
         if ((filters.isEmpty()) && (other == null)) {
-            return;
+            return null;
         }
         Map row = null;
         Object record = data.getData();
@@ -47,13 +47,14 @@ public class RouterProcessor<T extends Message> extends AbstractChainProcessor<T
         }
 
         boolean isExecute = false;
+        Object result = null;
         for (FilterProcessor filter : filters) {
             if (filter.execute(row)) {
                 ChainProcessor processor = filter.getProcessor();
                 if (processor == null) {
                     continue;
                 }
-                processor.process(data);
+                result = processor.process(data);
                 isExecute = true;
                 break;
             }
@@ -62,7 +63,7 @@ public class RouterProcessor<T extends Message> extends AbstractChainProcessor<T
             if (other.execute(row)) {
                 ChainProcessor processor = other.getProcessor();
                 if (processor != null) {
-                    processor.process(data);
+                    result = processor.process(data);
                 }
                 isExecute = true;
             }
@@ -70,6 +71,7 @@ public class RouterProcessor<T extends Message> extends AbstractChainProcessor<T
         if (!isExecute) {
             throw new RuntimeException("路由中表达式不正确！");
         }
+        return (R) result;
     }
 
 }

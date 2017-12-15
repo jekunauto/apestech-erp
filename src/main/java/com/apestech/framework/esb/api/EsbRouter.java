@@ -45,16 +45,16 @@ public class EsbRouter {
         return routers;
     }
 
-    public OapResponse process(Request request) {
+    public OapResponse process(SimpleRequest request) {
         String method = request.getRopRequestContext().getMethod();
         String version = request.getRopRequestContext().getVersion();
-        Processor<Request> processor = getProcessor(method, version);
-        processor.process(request);
-        return new OapResponse().setBody(request.getData());
+        Processor<SimpleRequest, Object> processor = getProcessor(method, version);
+        Object result = processor.process(request);
+        return new OapResponse().setBody(result);
     }
 
     @Transactional()
-    public OapResponse invoke(Request request) {
+    public OapResponse invoke(SimpleRequest request) {
         return process(request);
     }
 

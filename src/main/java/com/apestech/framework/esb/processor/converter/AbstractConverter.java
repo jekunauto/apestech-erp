@@ -1,6 +1,6 @@
 package com.apestech.framework.esb.processor.converter;
 
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 import com.apestech.framework.esb.processor.AbstractChainProcessor;
 import org.springframework.util.Assert;
 
@@ -10,16 +10,16 @@ import org.springframework.util.Assert;
  * @author xul
  * @create 2017-12-02 14:35
  */
-public abstract class AbstractConverter<T extends Message> extends AbstractChainProcessor<T> implements Converter<T> {
+public abstract class AbstractConverter<T extends Request, R> extends AbstractChainProcessor<T, R> implements Converter<T, R> {
 
     public AbstractConverter() {
         super();
     }
 
     @Override
-    public void doProcess(T data) {
+    public R doProcess(T data) {
         Assert.notNull(data, this.getClass().getName() + ": data parameter must not be null.");
-        convert(data);
+        return convert(data);
     }
 
 }

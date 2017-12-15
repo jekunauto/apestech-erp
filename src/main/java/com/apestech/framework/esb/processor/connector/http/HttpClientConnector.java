@@ -1,6 +1,6 @@
 package com.apestech.framework.esb.processor.connector.http;
 
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 import com.apestech.framework.esb.processor.connector.Connector;
 import com.apestech.framework.util.Tools;
 import com.apestech.oap.Constants;
@@ -24,7 +24,7 @@ import java.util.Map;
  * @author xul
  * @create 2017-12-02 15:13
  */
-public class HttpClientConnector<T extends Message> implements Connector<T> {
+public class HttpClientConnector<T extends Request, R> implements Connector<T, R> {
 
     protected String url = null;
     private String enc = Constants.UTF8;
@@ -74,7 +74,7 @@ public class HttpClientConnector<T extends Message> implements Connector<T> {
     }
 
     @Override
-    public void process(T data) {
+    public R process(T data) {
         Object body = data.getData();
         Assert.notNull(body, this.getClass().getName() + ": body must not be null.");
         if (body instanceof Map) {
@@ -100,7 +100,7 @@ public class HttpClientConnector<T extends Message> implements Connector<T> {
         } catch (IOException e) {
             throw new RuntimeException("Error while reading response from HTTP POST! " + e.getMessage());
         }
-        data.setData(result);
+        return (R) result;
     }
 
     private String InputStreamToString(InputStream input) {

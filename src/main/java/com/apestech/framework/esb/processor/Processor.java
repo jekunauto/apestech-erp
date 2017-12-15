@@ -1,6 +1,6 @@
 package com.apestech.framework.esb.processor;
 
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 
 /**
  * 功能：处理器接口
@@ -8,7 +8,7 @@ import com.apestech.framework.esb.api.Message;
  * @author xul
  * @create 2017-12-01 15:29
  */
-public interface Processor<T extends Message> {
+public interface Processor<T extends Request, R> {
 
-    void process(T data);
+    R process(T data);
 }

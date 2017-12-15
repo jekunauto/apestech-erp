@@ -86,7 +86,7 @@ public class EsbEventListener implements RopEventListener<AfterStartedRopEvent> 
     }
 
     private Method getMethod(ComponentDefinition value, Object handler) {
-        String parameterType = "com.apestech.framework.esb.api.Request";
+        String parameterType = "com.apestech.framework.esb.api.SimpleRequest";
         boolean isTransaction = "true".equals(value.getAttribute("isTransaction").toString().toLowerCase());
         try {
             return handler.getClass().getMethod(isTransaction ? "invoke" : "process", Class.forName(parameterType));

@@ -1,6 +1,6 @@
 package com.apestech.framework.esb.processor;
 
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 
 /**
  * 功能：处理器抽象类
@@ -8,7 +8,7 @@ import com.apestech.framework.esb.api.Message;
  * @author xul
  * @create 2017-12-02 13:46
  */
-public abstract class AbstractChainProcessor<T extends Message> implements ChainProcessor<T> {
+public abstract class AbstractChainProcessor<T extends Request, R> implements ChainProcessor<T, R> {
 
     protected ChainProcessor processor = null;
 
@@ -30,12 +30,16 @@ public abstract class AbstractChainProcessor<T extends Message> implements Chain
     }
 
     @Override
-    public void process(T data) {
-        doProcess(data);
+    public R process(T data) {
+        R result = doProcess(data);
         if (processor != null) {
-            processor.process(data);
+            if (result != null) {
+                data.setData(result);
+            }
+            result = (R) processor.process(data);
         }
+        return result;
     }
 
-    protected abstract void doProcess(T data);
+    protected abstract R doProcess(T data);
 }

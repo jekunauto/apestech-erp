@@ -2,7 +2,7 @@ package com.apestech.framework.esb.processor.mapping;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 import com.apestech.framework.esb.processor.converter.AbstractConverter;
 import com.apestech.framework.esb.processor.mapping.config.Config;
 import com.apestech.framework.esb.processor.mapping.config.Field;
@@ -24,7 +24,7 @@ import java.util.Map;
  * @author xul
  * @create 2017-12-02 15:58
  */
-public class Mapping<T extends Message> extends AbstractConverter<T> {
+public class Mapping<T extends Request, R> extends AbstractConverter<T, R> {
 
     private String configKey = null;
     private boolean clone = false;
@@ -41,7 +41,7 @@ public class Mapping<T extends Message> extends AbstractConverter<T> {
     }
 
     @Override
-    public void convert(T source) {
+    public R convert(T source) {
         Assert.notNull(configKey, this.getClass().getName() + ": configKey must not be null.");
         Config config = JKConfig.getConfig(configKey);
         Object data = source.getData();
@@ -60,19 +60,19 @@ public class Mapping<T extends Message> extends AbstractConverter<T> {
         }
 
         if (data instanceof Map) {
-            source.setData(mapping(config, (Map) data));
+            return (R) mapping(config, (Map) data);
         } else if (data instanceof List) {
             List rows = new ArrayList();
             for (Object o : ((List) data)) {
                 rows.add(mapping(config, (Map) o));
             }
-            source.setData(rows);
+            return (R) rows;
         } else if (data instanceof Object[]) {
             List rows = new ArrayList();
             for (Object o : ((Object[]) data)) {
                 rows.add(mapping(config, (Map) o));
             }
-            source.setData(rows.toArray());
+            return (R) rows.toArray();
         } else {
             throw new RuntimeException("source element Expected. Got - " + source.getClass());
         }

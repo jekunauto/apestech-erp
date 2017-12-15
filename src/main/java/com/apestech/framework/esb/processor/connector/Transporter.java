@@ -1,6 +1,6 @@
 package com.apestech.framework.esb.processor.connector;
 
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 import com.apestech.framework.esb.processor.AbstractChainProcessor;
 import org.springframework.util.Assert;
 
@@ -10,7 +10,7 @@ import org.springframework.util.Assert;
  * @author xul
  * @create 2017-12-02 15:17
  */
-public class Transporter<T extends Message, C> extends AbstractChainProcessor<T> {
+public class Transporter<T extends Request, R> extends AbstractChainProcessor<T, R> {
 
     private Connector connector;
 
@@ -30,11 +30,11 @@ public class Transporter<T extends Message, C> extends AbstractChainProcessor<T>
     }
 
     @Override
-    protected void doProcess(T data) {
+    protected R doProcess(T data) {
         Assert.notNull(connector, this.getClass().getName() + ": connector must not be null.");
         try {
             connector.connect();
-            connector.process(data);
+            return (R) connector.process(data);
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {

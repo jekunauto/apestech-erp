@@ -42,7 +42,7 @@ public class EsbFileParser {
     public void init() {
         try {
             SAXReader reader = new SAXReader();
-            refreshFile(reader, this.getClass().getResource("/").getPath());
+            refreshFile(reader, this.getClass().getResource("/com/apestech").getPath());
         } catch (Exception ex) {
             logger.error(ex.getMessage());
         }

@@ -1,6 +1,6 @@
 package com.apestech.framework.esb.processor;
 
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 
 import java.util.*;
 
@@ -10,10 +10,10 @@ import java.util.*;
  * @author xul
  * @create 2017-12-06 9:16
  */
-public class SplitterProcessor<T extends Message> extends AbstractChainProcessor<T> {
+public class SplitterProcessor<T extends Request, R> extends AbstractChainProcessor<T, R> {
 
     @Override
-    public void process(T data) {
+    public R process(T data) {
         List rows;
         List result;
         Object record = data.getData();
@@ -22,19 +22,20 @@ public class SplitterProcessor<T extends Message> extends AbstractChainProcessor
             rows.add(record);
             result = exec(data, rows);
             if (result.size() > 0) {
-                data.setData(result.get(0));
+                return (R) result.get(0);
             }
         } else if (record instanceof List) {
             rows = (List) record;
             result = exec(data, rows);
-            data.setData(result);
+            return (R) result;
         } else if (record instanceof Object[]) {
             rows = Arrays.asList(record);
             result = exec(data, rows);
-            data.setData(result.toArray());
+            return (R) result.toArray();
         } else {
             throw new RuntimeException("record element Expected. Got - " + record.getClass());
         }
+        return null;
     }
 
     private List exec(T data, List rows) {
@@ -54,6 +55,7 @@ public class SplitterProcessor<T extends Message> extends AbstractChainProcessor
     }
 
     @Override
-    protected void doProcess(T data) {
+    protected R doProcess(T data) {
+        return null;
     }
 }

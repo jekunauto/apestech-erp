@@ -1,6 +1,6 @@
 package com.apestech.framework.esb.processor.converter;
 
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 
 /**
  * 功能：转换器接口
@@ -8,8 +8,8 @@ import com.apestech.framework.esb.api.Message;
  * @author xul
  * @create 2017-12-02 14:35
  */
-public interface Converter<T extends Message> {
+public interface Converter<T extends Request, R> {
 
-    void convert(T record);
+    R convert(T record);
 
 }

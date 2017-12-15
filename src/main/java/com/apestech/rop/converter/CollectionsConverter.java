@@ -6,7 +6,7 @@ import java.util.Collection;
 
 
 /**
- * Created with IntelliJ IDEA. User: stamen Date: 13-10-25 Time: 上午11:54 To
+ * Created with IntelliJ IDEA. Person: stamen Date: 13-10-25 Time: 上午11:54 To
  * change this template use File | Settings | File Templates.
  * 
  * @param <T>

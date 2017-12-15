@@ -1,6 +1,9 @@
 package com.apestech.framework.util;
 
+import com.apestech.rbac.domain.User;
 import org.apache.commons.beanutils.BeanUtils;
+import org.dozer.DozerBeanMapper;
+import org.dozer.Mapper;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -68,13 +71,6 @@ public class Tools {
         }
     }
 
-    /**
-     * Converts a map to a JavaBean.
-     *
-     * @param type type to convert
-     * @param map  map to convert
-     * @return JavaBean converted
-     */
 //    public static final <T> T toBean(Class<?> type, Map<String, ? extends Object> map){
 //        try {
 //            BeanInfo beanInfo = Introspector.getBeanInfo(type);
@@ -102,6 +98,7 @@ public class Tools {
 //        }
 //    }
 
+    @Deprecated
     public static <T> T toBean(Class<?> type, Map<String, ? extends Object> row){
         try {
             T bean = (T) type.newInstance();
@@ -114,13 +111,23 @@ public class Tools {
         }
     }
 
+    /*
+     * 深度映射(Deep Mapping) (Object - Object)
+     */
+    public static <T> T map(Object source, Class<T> type) {
+        Mapper mapper = new DozerBeanMapper();
+        return mapper.map(source, type);
+    }
+
     /**
      * 两个Bean之间属性对拷
+     *
      * @param <T>
-     * @param dest  现将要设置新值的对象
-     * @param source     源数据对象
+     * @param dest   现将要设置新值的对象
+     * @param source 源数据对象
      */
-    public static <T> void  beanConvert(T dest,T source){
+    @Deprecated
+    public static <T> void beanConvert(T dest, T source) {
         try {
             BeanUtils.copyProperties(dest, source);
         } catch (IllegalAccessException e) {
@@ -130,7 +137,7 @@ public class Tools {
         }
     }
 
-    public static String replace(String s){
+    public static String replace(String s) {
         return ((PropertiesUtils) SpringManager.getBean("propertiesUtils")).replace(s);
     }
 }

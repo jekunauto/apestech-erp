@@ -21,22 +21,39 @@ public class HazelcastCache<K, V> implements Cache<K, V> {
 
     @Override
     public V get(K key) {
-        org.springframework.cache.Cache.ValueWrapper vw = getCache().get(key);
-        if(vw == null) return null;
+        org.springframework.cache.Cache.ValueWrapper vw = getCache(CONST_DEFAULT_CACHENAME).get(key);
+        if (vw == null) return null;
         return (V) vw.get();
     }
 
     @Override
     public void put(K key, V value) {
-        getCache().put(key, value);
+        getCache(CONST_DEFAULT_CACHENAME).put(key, value);
     }
 
     @Override
     public void remove(K key) {
-        getCache().evict(key);
+        getCache(CONST_DEFAULT_CACHENAME).evict(key);
     }
 
-    private org.springframework.cache.Cache getCache(){
-        return cacheManager.getCache(CONST_DEFAULT_CACHENAME);
+    @Override
+    public V get(String cache, K key) {
+        org.springframework.cache.Cache.ValueWrapper vw = getCache(cache).get(key);
+        if (vw == null) return null;
+        return (V) vw.get();
+    }
+
+    @Override
+    public void put(String cache, K key, V value) {
+        getCache(cache).put(key, value);
+    }
+
+    @Override
+    public void remove(String cache, K key) {
+        getCache(cache).evict(key);
+    }
+
+    private org.springframework.cache.Cache getCache(String name) {
+        return cacheManager.getCache(name);
     }
 }

@@ -1,34 +1,29 @@
 package com.apestech.framework.esb.api;
 
-import com.apestech.oap.AbstractRopRequest;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
-import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Map;
 
+public interface Request {
 
-public class Request extends AbstractRopRequest implements Message {
+    Object getData();
 
-    @NotNull
-    private String body;
+    Request setData(Object o);
 
-    private Object data;
+    Map getMap();
 
-    public String getBody() {
-        return body;
-    }
+    List getList();
 
-    public void setBody(String body) {
-        this.body = body;
-    }
+    String getS();
 
-    @Override
-    public Object getData() {
-        return (data == null) ? this.body : data;
-    }
+    JSONObject getJO();
 
-    @Override
-    public Message setData(Object o) {
-        this.data = o;
-        return this;
-    }
+    JSONArray getJA();
+
+    <T> T get(String key);
+
+    <T> T getO(Class<T> type);
 
 }

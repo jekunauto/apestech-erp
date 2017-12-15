@@ -81,9 +81,9 @@ public class MQStoreService {
         int i = 0;
         while (lastSize == size) {
             Query query = new BasicQuery(ref).with(sort).limit(size); //.skip(i * size)
-            List<MQueue> Messages = template.find(query, MQueue.class);
-            lastSize = Messages.size();
-            for (MQueue message: Messages){
+            List<MQueue> messages = template.find(query, MQueue.class);
+            lastSize = messages.size();
+            for (MQueue message: messages){
                 publisher.send(message);
             }
             i++;

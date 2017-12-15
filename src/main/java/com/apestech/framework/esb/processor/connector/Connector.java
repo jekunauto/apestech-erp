@@ -1,6 +1,6 @@
 package com.apestech.framework.esb.processor.connector;
 
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 import com.apestech.framework.esb.processor.Processor;
 
 /**
@@ -9,7 +9,7 @@ import com.apestech.framework.esb.processor.Processor;
  * @author xul
  * @create 2017-12-02 14:35
  */
-public interface Connector<T extends Message> extends Processor<T> {
+public interface Connector<T extends Request, R> extends Processor<T, R> {
 
     void connect();
 

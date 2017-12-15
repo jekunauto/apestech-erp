@@ -2,7 +2,7 @@ package com.apestech.framework.esb.processor;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 import com.apestech.framework.mq.Channel;
 import com.apestech.framework.mq.domain.MQueue;
 import com.apestech.framework.util.SpringManager;
@@ -16,7 +16,7 @@ import java.util.Map;
  * @author xul
  * @create 2017-12-07 17:30
  */
-public class ProducerProcessor<T extends Message> extends AbstractChainProcessor<T> {
+public class ProducerProcessor<T extends Request, R> extends AbstractChainProcessor<T, R> {
 
     private String topic;
     private String description;
@@ -38,7 +38,7 @@ public class ProducerProcessor<T extends Message> extends AbstractChainProcessor
     }
 
     @Override
-    protected void doProcess(T data) {
+    protected R doProcess(T data) {
         String body;
         Object record = data.getData();
         if (record instanceof Map) {
@@ -56,6 +56,7 @@ public class ProducerProcessor<T extends Message> extends AbstractChainProcessor
         message.setDescription(description);
         message.setBody(body);
         channel.publish(message);
+        return null;
     }
 
 }

@@ -1,7 +1,7 @@
 package com.apestech.framework.esb.processor;
 
 import com.apestech.framework.esb.api.EsbRouter;
-import com.apestech.framework.esb.api.Message;
+import com.apestech.framework.esb.api.Request;
 import com.apestech.framework.util.SpringManager;
 import org.springframework.util.Assert;
 
@@ -11,7 +11,7 @@ import org.springframework.util.Assert;
  * @author xul
  * @create 2017-12-04 16:46
  */
-public class SubChainProcessor<T extends Message> extends AbstractChainProcessor<T> {
+public class SubChainProcessor<T extends Request, R> extends AbstractChainProcessor<T, R> {
 
     private String method; //编号
     private String version; //版本
@@ -33,13 +33,12 @@ public class SubChainProcessor<T extends Message> extends AbstractChainProcessor
     }
 
     @Override
-    protected void doProcess(T data) {
+    protected R doProcess(T data) {
         try {
             Processor processor = ((EsbRouter) SpringManager.getBean("esbRouter")).getProcessor(method, version);
             Assert.notNull(processor, this.getClass().getName() + ": "  + " 链："  + method + " V" + version + "定义。");
-            processor.process(data);
+            return (R) processor.process(data);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e.toString());
         }
     }

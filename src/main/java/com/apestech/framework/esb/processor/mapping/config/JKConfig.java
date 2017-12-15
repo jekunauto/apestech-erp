@@ -52,7 +52,7 @@ public class JKConfig extends DefaultHandler {
         SAXParser parser = null;
         try {
             parser = factory.newSAXParser();
-            refreshFile(parser, this.getClass().getResource("/").getPath());
+            refreshFile(parser, this.getClass().getResource("/com/apestech").getPath());
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println(ex.getMessage());
@@ -77,12 +77,12 @@ public class JKConfig extends DefaultHandler {
                 String[] paths = files[i].getAbsolutePath().split("classes");
                 if (paths.length == 1) {
                     fileName = paths[0];
-                    if (fileName.toLowerCase().endsWith("_columns.xml")) {
+                    if (fileName.toLowerCase().endsWith("_mapping.xml")) {
                         is = new FileInputStream(fileName);
                     }
                 } else if (paths.length == 2) {
                     fileName = paths[1];
-                    if (fileName.toLowerCase().endsWith("_columns.xml")) {
+                    if (fileName.toLowerCase().endsWith("_mapping.xml")) {
                         is = Resources.getResourceAsStream(fileName);
                     }
                 }

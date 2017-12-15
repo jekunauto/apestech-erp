@@ -1,7 +1,10 @@
 package com.apestech.framework.cache;
 
+import org.springframework.util.Assert;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 功能：内存缓存类
@@ -41,6 +44,33 @@ public class MemoryCache<K, V> implements Cache<K, V> {
     @Override
     public void remove(K key) {
         cache.remove(key);
+    }
+
+    @Override
+    public V get(String cache, K key) {
+        Map m = (Map) instance.get(cache);
+        if (m == null) {
+            m = new ConcurrentHashMap();
+        }
+        return (V) m.get(key);
+    }
+
+    @Override
+    public void put(String cache, K key, V value) {
+        Map m = (Map) instance.get(cache);
+        if (m == null) {
+            m = new ConcurrentHashMap();
+        }
+        m.put(key, value);
+    }
+
+    @Override
+    public void remove(String cache, K key) {
+        Map m = (Map) instance.get(cache);
+        if (m == null) {
+            return;
+        }
+        m.remove(key);
     }
 }
 
