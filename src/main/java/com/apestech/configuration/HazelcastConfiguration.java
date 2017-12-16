@@ -34,7 +34,7 @@ public class HazelcastConfiguration {
             config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
             config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true).setMembers(Arrays.asList(members));
 
-            config.getManagementCenterConfig().setEnabled(true).setUrl("http://localhost:8080/mancenter");
+            config.getManagementCenterConfig().setEnabled(true).setUrl("http://10.2.4.196:8080/mancenter");
 
         } else if (value.equals("multicast")) {
             value = env.getProperty("spring.hazelcast.multicast.port");
