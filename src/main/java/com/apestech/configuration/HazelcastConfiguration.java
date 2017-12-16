@@ -21,16 +21,19 @@ public class HazelcastConfiguration {
     public Config hazelCastConfig() {
 
         
-        Config config = new Config()
-                .setInstanceName("hazelcast-instance")
-                .setNetworkConfig(new NetworkConfig().setJoin(new JoinConfig().setMulticastConfig(new MulticastConfig().setMulticastPort(multicastPort))))
-//                .addMapConfig(
-//                        new MapConfig()
-//                                .setName("instruments")
-//                                .setMaxSizeConfig(new MaxSizeConfig(200, MaxSizeConfig.MaxSizePolicy.FREE_HEAP_SIZE))
-//                                .setEvictionPolicy(EvictionPolicy.LRU)
-//                                .setTimeToLiveSeconds(20))
-                ;
+        Config config = new Config().setInstanceName("hazelcast-instance");
+        config.setProperty("PROP_VERSION_CHECK_ENABLED", "false");
+        config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
+        config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true).setConnectionTimeoutSeconds(6000).addMember("10.2.4.196"); //.addMember("10.2.6.147")
+
+//        config.setNetworkConfig(new NetworkConfig().setJoin(new JoinConfig().setMulticastConfig(new MulticastConfig().setMulticastPort(multicastPort))))
+////                .addMapConfig(
+////                        new MapConfig()
+////                                .setName("instruments")
+////                                .setMaxSizeConfig(new MaxSizeConfig(200, MaxSizeConfig.MaxSizePolicy.FREE_HEAP_SIZE))
+////                                .setEvictionPolicy(EvictionPolicy.LRU)
+////                                .setTimeToLiveSeconds(20))
+//                ;
 //        System.out.println("组播协议端口: " + config.getNetworkConfig().getJoin().getMulticastConfig().getMulticastPort());
         return config;
     }
