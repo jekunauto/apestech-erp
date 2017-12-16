@@ -49,6 +49,7 @@ public class UserService {
     @Autowired
     private CacheManager cacheManager;
 
+    //http://localhost:8060/router?appKey=00001&body={"name":"CZY0001","password":"1234","roles":[{"id":"00123"}]}&method=user.login&version=1.0
     /**
      * 功能：通过Name查找用户
      *
