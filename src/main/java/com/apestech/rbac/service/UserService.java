@@ -56,10 +56,10 @@ public class UserService {
      * @return
      */
     public Map login(SimpleRequest request) {
-        User user = userRepository.findByName(request.get("name"));
-        Assert.notNull(user, "用户：" + request.get("name") + " 在系统中不存在。");
-        String password = MD5Util.encrypt(request.get("password"));
-        Assert.isTrue(user.getPassword().equalsIgnoreCase(password), "请输入合法密码。");
+//        User user = userRepository.findByName(request.get("name"));
+//        Assert.notNull(user, "用户：" + request.get("name") + " 在系统中不存在。");
+//        String password = MD5Util.encrypt(request.get("password"));
+//        Assert.isTrue(user.getPassword().equalsIgnoreCase(password), "请输入合法密码。");
         SimpleSession session = new SimpleSession();
         session.setAttribute("userName", request.get("name"));
         session.setAttribute("ip", request.getRopRequestContext().getIp());
