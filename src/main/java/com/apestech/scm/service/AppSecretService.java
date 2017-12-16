@@ -1,5 +1,6 @@
 package com.apestech.scm.service;
 
+import com.apestech.framework.esb.api.Request;
 import com.apestech.framework.esb.api.SimpleRequest;
 import com.apestech.framework.util.SpringManager;
 import com.apestech.oap.annotation.NeedInSessionType;

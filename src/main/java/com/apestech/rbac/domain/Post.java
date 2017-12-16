@@ -24,7 +24,14 @@ public class Post implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "organization")
+    private String organization;
+
+    @Column(name = "department")
+    private String department;
 
     @ManyToMany
     @JoinTable(name = "aut_post_users",
