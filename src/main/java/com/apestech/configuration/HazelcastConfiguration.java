@@ -24,7 +24,8 @@ public class HazelcastConfiguration {
         Config config = new Config().setInstanceName("hazelcast-instance");
         config.setProperty("PROP_VERSION_CHECK_ENABLED", "false");
         config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
-        config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true).setConnectionTimeoutSeconds(6000).addMember("10.2.4.196"); //.addMember("10.2.6.147")
+        config.getNetworkConfig().setPortCount(1);
+        config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true).addMember("10.2.4.196").addMember("10.2.6.147"); //.addMember("10.2.6.147")
 
 //        config.setNetworkConfig(new NetworkConfig().setJoin(new JoinConfig().setMulticastConfig(new MulticastConfig().setMulticastPort(multicastPort))))
 ////                .addMapConfig(
