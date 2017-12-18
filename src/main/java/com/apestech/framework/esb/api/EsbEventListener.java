@@ -16,7 +16,9 @@ import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class EsbEventListener implements RopEventListener<AfterStartedRopEvent> {
     protected final Logger logger = Logger.getLogger(getClass());
@@ -54,6 +56,10 @@ public class EsbEventListener implements RopEventListener<AfterStartedRopEvent> 
                 ServiceMethodDefinition definition = buildServiceMethodDefinition(componentDefinition);
                 ServiceMethodHandler serviceMethodHandler = new ServiceMethodHandler();
                 serviceMethodHandler.setServiceMethodDefinition(definition);
+                List<String> ignoreSignFieldNames = new ArrayList<>();
+                ignoreSignFieldNames.add("messageFormat");
+                ignoreSignFieldNames.add("sign");
+                serviceMethodHandler.setIgnoreSignFieldNames(ignoreSignFieldNames);
                 Object handler = getBean(context, "esbRouter");
                 serviceMethodHandler.setHandler(handler); // handler
                 Method method = getMethod(componentDefinition, handler);

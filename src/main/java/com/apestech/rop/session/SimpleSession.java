@@ -3,15 +3,25 @@ package com.apestech.rop.session;
 import com.apestech.framework.util.Tools;
 import com.apestech.oap.Constants;
 import com.apestech.oap.session.Session;
+import com.apestech.rbac.domain.Post;
+import com.apestech.rbac.domain.User;
+import lombok.Data;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Data
 public class SimpleSession implements Session {
 
     private final Map<String, Object> attributeCache = new ConcurrentHashMap();
 
-    /**
+    private String sessionId; //session Id
+    private String ip; //用户
+    private String userId; //用户Id
+    private User user; //用户
+    private Post post; //岗位
+
+    /**大
      * 设置属性
      *
      * @param name

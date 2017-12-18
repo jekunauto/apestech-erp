@@ -40,7 +40,7 @@ public class Post implements Serializable {
     )
     private Set<User> assignedUsers;
 
-    @ManyToMany(mappedBy = "assignedPosts")
+    @ManyToMany(mappedBy = "assignedPosts", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Role> roles = new ArrayList<Role>();
 
     @ManyToMany(mappedBy = "assignedPosts")

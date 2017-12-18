@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <onfig id="ts.form.fld.batch" description="创建用户">
-        <field attrname="GSXX01" allownull="N"/><!--公司代码-->
-        <field attrname="BM01" allownull="N"/><!--销售部门-->
-    </onfig>
+    <config id="aut.user.save" description="创建用户">
+        <field attrname="name" allownull="N" name="用户名"/>
+        <field attrname="userId" allownull="N" name="用户ID"/>
+        <field attrname="password" allownull="N" name="密码（明文）"/>
+    </config>
+
+    <config id="aut.user.login" description="用户登陆">
+        <field attrname="userId" allownull="N" name="用户ID"/>
+        <field attrname="password" allownull="N" name="密码（明文）"/>
+    </config>
+
+    <config id="aut.user.bindPost" description="绑定岗位">
+        <field attrname="sessionId" allownull="N" name="session ID"/>
+        <field attrname="postId" allownull="N" fieldtype="int" name="岗位ID"/>
+    </config>
 </root>

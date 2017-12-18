@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <chain method="aut.user.save" version="1.0" ignoreSign="true" needInSession="false" isTransaction="true" description="用户保存">
-        <action component="userService" method=""/>
+    <chain method="aut.user.save" version="1.0" ignoreSign="false" needInSession="false" isTransaction="true" description="用户保存">
+        <processor component="mapping" configKey="aut.user.save"/>
+        <action component="userService" method="save"/>
     </chain>
 
-    <chain method="aut.user.login" version="1.0" ignoreSign="true" needInSession="false" isTransaction="true" description="登陆">
+    <chain method="aut.user.login" version="1.0" ignoreSign="false" needInSession="false" isTransaction="true" description="登陆">
+        <processor component="mapping" configKey="aut.user.login"/>
         <action component="userService" method="login"/>
+    </chain>
+
+    <chain method="aut.user.logout" version="1.0" ignoreSign="true" needInSession="true" isTransaction="false" description="登出">
+        <action component="userService" method="logout"/>
+    </chain>
+
+    <chain method="aut.user.bindPost" version="1.0" ignoreSign="false" needInSession="true" isTransaction="false" description="绑定岗位">
+        <processor component="mapping" configKey="aut.user.bindPost"/>
+        <action component="userService" method="bindPost"/>
     </chain>
 </root>
