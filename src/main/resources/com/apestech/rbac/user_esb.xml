@@ -10,11 +10,11 @@
         <action component="userService" method="login"/>
     </chain>
 
-    <chain method="aut.user.logout" version="1.0" ignoreSign="true" needInSession="true" isTransaction="false" description="登出">
+    <chain method="aut.user.logout" version="1.0" ignoreSign="false" needInSession="true" isTransaction="false" description="登出">
         <action component="userService" method="logout"/>
     </chain>
 
-    <chain method="aut.user.bindPost" version="1.0" ignoreSign="false" needInSession="true" isTransaction="false" description="绑定岗位">
+    <chain method="aut.user.bindPost" version="1.0" ignoreSign="true" needInSession="true" isTransaction="false" description="绑定岗位">
         <processor component="mapping" configKey="aut.user.bindPost"/>
         <action component="userService" method="bindPost"/>
     </chain>

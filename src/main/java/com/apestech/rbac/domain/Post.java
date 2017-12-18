@@ -33,16 +33,16 @@ public class Post implements Serializable {
     @Column(name = "department")
     private String department;
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "aut_post_users",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "post_id", referencedColumnName = "id")}
+            joinColumns = {@JoinColumn(name = "post_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}
     )
     private Set<User> assignedUsers;
 
-    @ManyToMany(mappedBy = "assignedPosts", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "assignedPosts", fetch = FetchType.EAGER)
     private List<Role> roles = new ArrayList<Role>();
 
-    @ManyToMany(mappedBy = "assignedPosts")
+    @ManyToMany(mappedBy = "assignedPosts", fetch = FetchType.EAGER)
     private List<Organization> organizations = new ArrayList<Organization>();
 }

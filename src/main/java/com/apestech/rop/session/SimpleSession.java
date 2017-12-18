@@ -10,7 +10,6 @@ import lombok.Data;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Data
 public class SimpleSession implements Session {
 
     private final Map<String, Object> attributeCache = new ConcurrentHashMap();
@@ -21,7 +20,56 @@ public class SimpleSession implements Session {
     private User user; //用户
     private Post post; //岗位
 
-    /**大
+    public Map<String, Object> getAttributeCache() {
+        return attributeCache;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+        attributeCache.put(Constants.SESSION_CHANGED, true);
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+        attributeCache.put(Constants.SESSION_CHANGED, true);
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+        attributeCache.put(Constants.SESSION_CHANGED, true);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        attributeCache.put(Constants.SESSION_CHANGED, true);
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+        attributeCache.put(Constants.SESSION_CHANGED, true);
+    }
+
+    /**
      * 设置属性
      *
      * @param name

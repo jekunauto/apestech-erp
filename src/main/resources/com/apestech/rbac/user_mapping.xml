@@ -12,7 +12,6 @@
     </config>
 
     <config id="aut.user.bindPost" description="绑定岗位">
-        <field attrname="sessionId" allownull="N" name="session ID"/>
         <field attrname="postId" allownull="N" fieldtype="int" name="岗位ID"/>
     </config>
 </root>

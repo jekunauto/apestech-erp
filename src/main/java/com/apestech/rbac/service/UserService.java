@@ -103,23 +103,17 @@ public class UserService {
         return result;
     }
 
-    public Post bindPost(SimpleRequest request) {
-        IMap<String, SimpleSession> map = hazelcastInstance.getMap("sessionCache");
-        Collection<SimpleSession> sessions = map.values(new SqlPredicate(String.format("sessionId = %s", request.get("sessionId"))));
-        if (sessions.size() == 0) {
-            throw new RuntimeException("session Id: " + request.get("sessionId") + "请重新登陆。");
-        }
-        SimpleSession session = (SimpleSession) sessions.toArray()[0];
+    public void bindPost(SimpleRequest request) {
+        SimpleSession session = (SimpleSession) request.getRopRequestContext().getSession();
         Post post = null;
         for (Post o : session.getUser().getPosts()) {
-            if(o.getId() == request.get("postId")){
+            if(o.getId().equals(request.get("postId"))){
                 post = o;
                 break;
             }
         }
         Assert.notNull(post, "岗位ID：" + request.get("postId") + " 输入错误。");
         session.setPost(post);
-        return post;
     }
 
     public void logout(SimpleRequest request) {
