@@ -45,11 +45,19 @@ public class UserService {
         return user;
     }
 
+    public User save(SimpleRequest request) {
+        User user = request.getO(User.class);
+        user.setPassword(MD5Util.encrypt(request.get("password")));
+        userRepository.save(user);
+        return user;
+    }
+
 
     @Autowired
     private CacheManager cacheManager;
 
     //http://localhost:8060/router?appKey=00001&body={"name":"CZY0001","password":"1234","roles":[{"id":"00123"}]}&method=user.login&version=1.0
+
     /**
      * 功能：通过Name查找用户
      *
@@ -57,10 +65,10 @@ public class UserService {
      * @return
      */
     public Map login(SimpleRequest request) {
-//        User user = userRepository.findByName(request.get("name"));
-//        Assert.notNull(user, "用户：" + request.get("name") + " 在系统中不存在。");
-//        String password = MD5Util.encrypt(request.get("password"));
-//        Assert.isTrue(user.getPassword().equalsIgnoreCase(password), "请输入合法密码。");
+        User user = userRepository.findByName(request.get("name"));
+        Assert.notNull(user, "用户：" + request.get("name") + " 在系统中不存在。");
+        String password = MD5Util.encrypt(request.get("password"));
+        Assert.isTrue(user.getPassword().equalsIgnoreCase(password), "请输入合法密码。");
         SimpleSession session = new SimpleSession();
         session.setAttribute("userName", request.get("name"));
         session.setAttribute("ip", request.getRopRequestContext().getIp());
@@ -68,6 +76,7 @@ public class UserService {
         request.getRopRequestContext().addSession(sessionId, session);
         Map result = new HashedMap();
         result.put("sessionId", sessionId);
+
 
         Collection<String> caches = cacheManager.getCacheNames();
         for (String cache : caches) {

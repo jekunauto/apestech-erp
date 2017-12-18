@@ -23,7 +23,6 @@ public class HazelcastConfiguration {
     @Bean
     public Config hazelCastConfig() {
         Config config = new Config().setInstanceName("hazelcast-instance");
-
         String value = env.getProperty("spring.hazelcast.networking");
         Assert.notNull(value, "属性值： spring.hazelcast.networking 没有配置。");
         if (value.equals("tcp_ip")) {
@@ -33,9 +32,10 @@ public class HazelcastConfiguration {
             Assert.isTrue(members.length >= 1, "属性值： spring.hazelcast.tcp_ip.members 没有配置。");
             config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
             config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true).setMembers(Arrays.asList(members));
-
-            config.getManagementCenterConfig().setEnabled(true).setUrl("http://10.2.4.196:8080/mancenter");
-
+            String url = env.getProperty("spring.hazelcast.management-center.url");
+            if (url != null) {
+                config.getManagementCenterConfig().setEnabled(true).setUrl(url);
+            }
         } else if (value.equals("multicast")) {
             value = env.getProperty("spring.hazelcast.multicast.port");
             int port = value != null ? Integer.valueOf(value.trim()) : 54327;
@@ -44,7 +44,6 @@ public class HazelcastConfiguration {
         } else {
             throw new RuntimeException("组网类型配置错误。");
         }
-
         return config;
     }
 

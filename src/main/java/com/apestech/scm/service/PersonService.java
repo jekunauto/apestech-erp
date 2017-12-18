@@ -37,7 +37,7 @@ public class PersonService {
     private HazelcastCache cache;
 
     @Transactional()
-    @ServiceMethod(method = "user.logon")
+    @ServiceMethod(method = "person.logon")
     public OapResponse<Person> logon(LogonRequest request) {
         PersonRepository repository = SpringManager.getBean("personRepository");
         Person user = new Person("userName");
@@ -51,7 +51,7 @@ public class PersonService {
      * 功能：事务传递性测试(service => service)
      */
     @Transactional()
-    @ServiceMethod(method = "user.save", ignoreSign = IgnoreSignType.YES) //, ignoreSign = IgnoreSignType.YES
+    @ServiceMethod(method = "person.save", ignoreSign = IgnoreSignType.YES) //, ignoreSign = IgnoreSignType.YES
     public OapResponse<?> save(SimpleRequest request) {
         Lock lock = lockUtil.getDistributedLock("test");
         lock.lock();// 得到锁

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <chain method="user.login" version="1.0" ignoreSign="true" needInSession="false" isTransaction="true" description="Action调用">
+    <chain method="aut.user.save" version="1.0" ignoreSign="true" needInSession="false" isTransaction="true" description="用户保存">
+        <action component="userService" method=""/>
+    </chain>
+
+    <chain method="aut.user.login" version="1.0" ignoreSign="true" needInSession="false" isTransaction="true" description="登陆">
         <action component="userService" method="login"/>
     </chain>
 </root>

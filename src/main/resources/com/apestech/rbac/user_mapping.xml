@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
+    <onfig id="ts.form.fld.batch" description="创建用户">
+        <field attrname="GSXX01" allownull="N"/><!--公司代码-->
+        <field attrname="BM01" allownull="N"/><!--销售部门-->
+    </onfig>
 </root>

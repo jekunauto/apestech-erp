@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<root>
-    <config id="demo.action">
-        <field attrname="activityId" fieldtype="string" allownull="N" name="活动ID"/>
-        <field attrname="exclude" fieldtype="int" defaultValue="0" check="exclude in (0, 1)" name="排它"/> <!--排它（0：不排它，1：排它）-->
-    </config>
-</root>
