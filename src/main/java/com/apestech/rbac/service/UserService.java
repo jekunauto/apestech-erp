@@ -1,12 +1,9 @@
 package com.apestech.rbac.service;
 
-import com.apestech.framework.cache.HazelcastCache;
 import com.apestech.framework.esb.api.SimpleRequest;
 import com.apestech.framework.util.LockUtil;
 import com.apestech.framework.util.MD5Util;
-import com.apestech.oap.session.Session;
 import com.apestech.rbac.domain.Post;
-import com.apestech.rbac.domain.Role;
 import com.apestech.rbac.domain.User;
 import com.apestech.rbac.repository.UserRepository;
 import com.apestech.rop.session.SimpleSession;
@@ -15,16 +12,13 @@ import com.hazelcast.core.IMap;
 import com.hazelcast.query.EntryObject;
 import com.hazelcast.query.Predicate;
 import com.hazelcast.query.PredicateBuilder;
-import com.hazelcast.query.SqlPredicate;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -84,19 +78,21 @@ public class UserService {
         EntryObject e = new PredicateBuilder().getEntryObject();
         Predicate predicate = e.get("userId").equal(request.get("userId"));
         Collection<SimpleSession> sessions = map.values(predicate);
+        SimpleSession session;
         if (sessions.size() == 0) {
             sessionId = lockUtil.getSessionId();
-            SimpleSession session = new SimpleSession();
+            session = new SimpleSession();
             session.setUserId(request.get("userId"));
             session.setUser(user);
             session.setIp(request.getRopRequestContext().getIp());
             session.setSessionId(sessionId);
-            request.getRopRequestContext().addSession(sessionId, session);
         } else if (sessions.size() == 1) {
-            sessionId = ((SimpleSession) sessions.toArray()[0]).getSessionId();
+            session = ((SimpleSession) sessions.toArray()[0]);
+            sessionId = session.getSessionId();
         } else {
             throw new RuntimeException("登陆策略错误。");
         }
+        request.getRopRequestContext().addSession(sessionId, session);
         Map result = new HashedMap();
         result.put("sessionId", sessionId);
         result.put("user", user);

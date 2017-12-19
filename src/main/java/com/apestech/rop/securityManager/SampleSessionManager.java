@@ -20,7 +20,9 @@ public class SampleSessionManager implements SessionManager {
     private HazelcastCache cache;
 
     public void addSession(String sessionId, Session session) {
-        cache.put(CONST_DEFAULT_CACHENAME, sessionId, session);
+        if (cache.get(CONST_DEFAULT_CACHENAME, sessionId) == null) {
+            cache.put(CONST_DEFAULT_CACHENAME, sessionId, session);
+        }
     }
 
     public Session getSession(String sessionId) {
