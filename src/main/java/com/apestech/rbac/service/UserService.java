@@ -99,7 +99,7 @@ public class UserService {
         return result;
     }
 
-    public void bindPost(SimpleRequest request) {
+    public Post bindPost(SimpleRequest request) {
         SimpleSession session = (SimpleSession) request.getRopRequestContext().getSession();
         Post post = null;
         for (Post o : session.getUser().getPosts()) {
@@ -110,6 +110,7 @@ public class UserService {
         }
         Assert.notNull(post, "岗位ID：" + request.get("postId") + " 输入错误。");
         session.setPost(post);
+        return post;
     }
 
     public void logout(SimpleRequest request) {
