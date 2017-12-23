@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+        xmlns:flowable="http://flowable.org/bpmn"
+        targetNamespace="Examples">
+
+    <process id="oneTaskProcess" name="The One Task Process">
+        <startEvent id="theStart"/>
+        <sequenceFlow id="flow1" sourceRef="theStart" targetRef="theTask01"/>
+        <userTask id="theTask01" name="my task01" />
+        <sequenceFlow id="flow2" sourceRef="theTask01" targetRef="theTask02"/>
+        <userTask id="theTask02" name="my task02" />
+        <sequenceFlow id="flow3" sourceRef="theTask02" targetRef="theEnd"/>
+        <endEvent id="theEnd"/>
+    </process>
+
+    <process id="twoTaskProcess" name="The One Task Process">
+        <userTask completionQuantity="1" id="_4" implementation="##unspecified" isForCompensation="false" name="User Task" startQuantity="1">
+        </userTask>
+        <serviceTask completionQuantity="1" id="_5" implementation="##WebService" isForCompensation="false" name="Service Task" startQuantity="1">
+        </serviceTask>
+        <sequenceFlow id="_6" sourceRef="_4" targetRef="_5"/>
+        <sequenceFlow id="_9" sourceRef="_2" targetRef="_4"/>
+        <sequenceFlow id="_10" sourceRef="_5" targetRef="_3"/>
+        <endEvent id="_3" name="End Event">
+            <incoming>_10</incoming>
+            <inputSet/>
+        </endEvent>
+        <startEvent id="_2" isInterrupting="true" name="Start Event" parallelMultiple="false">
+        </startEvent>
+    </process>
+
+</definitions>

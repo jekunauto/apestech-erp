@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <chain method="wf.test" version="1.0" ignoreSign="true" needInSession="false" isTransaction="false" description="登陆">
+        <action component="flowableEngine" method="test"/>
+    </chain>
+
+</root>

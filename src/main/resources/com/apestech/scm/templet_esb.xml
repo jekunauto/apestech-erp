@@ -12,7 +12,7 @@
                 <action component="userService" method="save"/>
             </if>
             <other>
-                <action component="userService" method="save"/>
+                <action component="userService" method="save1"/>
             </other>
         </router>
     </chain>
@@ -31,6 +31,7 @@
 
     <chain method="demo.action" version="1.0" ignoreSign="true" isTransaction="true" description="Action调用">
         <action component="userService" method="login"/>
+        <action component="userService" method="login1"/>
     </chain>
 
     <chain method="demo.subchain" version="1.0" ignoreSign="true" isTransaction="false" description="接口嵌套调用">

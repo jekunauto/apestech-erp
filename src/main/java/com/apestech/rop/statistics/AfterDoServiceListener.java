@@ -2,7 +2,7 @@ package com.apestech.rop.statistics;
 
 import com.alibaba.fastjson.JSON;
 import com.apestech.framework.event.Listener;
-import com.apestech.oap.Constants;
+import com.apestech.framework.util.NetUtil;
 import com.apestech.oap.event.AfterDoServiceEvent;
 
 import com.apestech.oap.event.RopEventListener;
@@ -35,6 +35,7 @@ public class AfterDoServiceListener implements RopEventListener<AfterDoServiceEv
     @Override
     public void onRopEvent(AfterDoServiceEvent ropEvent) {
         Statistics statistics = new Statistics();
+        statistics.setServer(NetUtil.getHostName());
         statistics.setMethod(ropEvent.getRopRequestContext().getMethod());
         statistics.setVersion(ropEvent.getRopRequestContext().getVersion());
         statistics.setAppKey(ropEvent.getRopRequestContext().getAppKey());

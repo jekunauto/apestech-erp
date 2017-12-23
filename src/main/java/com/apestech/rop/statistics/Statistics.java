@@ -19,6 +19,7 @@ public class Statistics {
 
     @Id  // 主键
     private String id; //消息编号
+    private String server;
     private String method;
     private String version;
     private String appKey;
