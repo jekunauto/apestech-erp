@@ -13,7 +13,7 @@ import com.apestech.framework.util.Tools;
 public class ChainParser implements Parser<ChainProcessor> {
 
     private ComponentDefinition componentDefinition;
-    private Class processorClazz;
+    private Class<ChainProcessor> processorClazz;
 
     public ChainParser(ComponentDefinition componentDefinition, Class processorClazz) {
         this.componentDefinition = componentDefinition;
@@ -22,7 +22,7 @@ public class ChainParser implements Parser<ChainProcessor> {
 
     @Override
     public ChainProcessor parse() {
-        ChainProcessor processor = Tools.toBean(processorClazz, componentDefinition.getAttributes());
+        ChainProcessor processor = Tools.map(componentDefinition.getAttributes(), processorClazz);
         for (ComponentDefinition componentDefinition : componentDefinition.getNestedComponents()) {
             processor.setProcessor((ChainProcessor) componentDefinition.getParser().parse());
         }

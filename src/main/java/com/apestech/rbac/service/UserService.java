@@ -1,5 +1,7 @@
 package com.apestech.rbac.service;
 
+import com.apestech.framework.jpa.dynamic.CriteriaFactory;
+import com.apestech.framework.jpa.dynamic.Criteria;
 import com.apestech.framework.esb.api.SimpleRequest;
 import com.apestech.framework.util.LockUtil;
 import com.apestech.framework.util.MD5Util;
@@ -13,14 +15,18 @@ import com.hazelcast.query.EntryObject;
 import com.hazelcast.query.Predicate;
 import com.hazelcast.query.PredicateBuilder;
 import org.apache.commons.collections.map.HashedMap;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-
 
 
 /**
@@ -45,7 +51,7 @@ public class UserService {
      * @return
      */
     public User findUserById(SimpleRequest request) {
-        User user = userRepository.findOne(request.get("id"));
+        User user = userRepository.findOne(Integer.valueOf(request.get("id")));
         Assert.notNull(user, "用户：" + request.get("id") + " 在系统中不存在。");
         return user;
     }
@@ -105,7 +111,7 @@ public class UserService {
         SimpleSession session = (SimpleSession) request.getRopRequestContext().getSession();
         Post post = null;
         for (Post o : session.getUser().getPosts()) {
-            if(o.getId().equals(request.get("postId"))){
+            if (o.getId().equals(request.get("postId"))) {
                 post = o;
                 break;
             }
@@ -117,6 +123,33 @@ public class UserService {
 
     public void logout(SimpleRequest request) {
         request.getRopRequestContext().removeSession();
+    }
+
+
+    /**
+     * 功能：查询动态参数测试
+     *
+     * @param request
+     */
+    public List<User> findAll(SimpleRequest request) {
+        List<Map> filters = request.get("condition");
+        Criteria<User> criteria = CriteriaFactory.toCriteria(filters);
+        return userRepository.findAll(criteria);
+    }
+
+    @Autowired
+    EntityManager em;
+
+    public List findUser(SimpleRequest request) {
+        String sql = "SELECT user0_.id       AS id1_15_," +
+                "       user0_.name     AS name2_15_," +
+                "       user0_.password AS password3_15_," +
+                "       user0_.userid   AS userid4_15_" +
+                "  FROM aut_users user0_";
+        Query query = em.createNativeQuery(sql);
+        // Query 接口是 spring-data-jpa 的接口，而 SQLQuery 接口是 hibenate 的接口，这里的做法就是先转成 hibenate 的查询接口对象，然后设置结果转换器
+        query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        return query.getResultList();
     }
 
 }

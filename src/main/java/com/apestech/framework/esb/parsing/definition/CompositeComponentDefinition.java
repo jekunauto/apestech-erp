@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 功能：组件定义类
+ * 功能：复合组件定义类
  *
  * @author xul
  * @create 2017-12-01 17:26

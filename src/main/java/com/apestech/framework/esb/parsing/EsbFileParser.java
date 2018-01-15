@@ -98,7 +98,7 @@ public class EsbFileParser {
     //遍历当前节点下的所有节点
     public void listNodes(Element node, ComponentDefinition root) {
         ComponentDefinition component = createComponentDefinition(node.getName());
-        if (root != null && !component.getName().equals("consumer")) root.setNestedComponent(component);
+        if (root != null && !component.getName().equalsIgnoreCase("consumer")) root.setNestedComponent(component);
 
         //首先获取当前节点的所有属性节点
         List<Attribute> list = node.attributes();
@@ -107,9 +107,9 @@ public class EsbFileParser {
             component.setAttribute(attribute.getName(), attribute.getValue());
         }
 
-        if (component.getName().equals("chain")) {
+        if (component.getName().equalsIgnoreCase("chain")) {
             EsbRouter.setRouter(component.getAttribute("method").toString(), component.getAttribute("version").toString(), component);
-        } else if (component.getName().equals("consumer")) {
+        } else if (component.getName().equalsIgnoreCase("consumer")) {
             subscribe(component);
         }
         createParser(component);
@@ -121,7 +121,7 @@ public class EsbFileParser {
     }
 
     private void subscribe(ComponentDefinition component) {
-        MessageConsumer consumer = Tools.toBean(MessageConsumer.class, component.getAttributes());
+        MessageConsumer consumer = Tools.map(component.getAttributes(), MessageConsumer.class);
         consumer.setComponentDefinition(component);
         MessageChannel.addConsumer(consumer);
     }
@@ -135,31 +135,31 @@ public class EsbFileParser {
     private void createParser(ComponentDefinition componentDefinition) {
         Parser parser = null;
         String name = componentDefinition.getName();
-        if (name.equals("chain")) {
+        if (name.equalsIgnoreCase("chain")) {
             parser = new ChainParser(componentDefinition, SampleChainProcessor.class);
-        } else if (name.equals("subchain")) {
+        } else if (name.equalsIgnoreCase("subChain")) {
             parser = new NormalParser(componentDefinition, SubChainProcessor.class);
-        } else if (name.equals("producer")) {
+        } else if (name.equalsIgnoreCase("producer")) {
             parser = new NormalParser(componentDefinition, ProducerProcessor.class);
-        } else if (name.equals("consumer")) {
+        } else if (name.equalsIgnoreCase("consumer")) {
             parser = new ChainParser(componentDefinition, ConsumerProcessor.class);
-        } else if (name.equals("router")) {
+        } else if (name.equalsIgnoreCase("router")) {
             parser = new RouterParser(componentDefinition);
-        } else if (name.equals("if")) {
+        } else if (name.equalsIgnoreCase("if")) {
             parser = new ChainParser(componentDefinition, FilterProcessor.class);
-        } else if (name.equals("other")) {
+        } else if (name.equalsIgnoreCase("other")) {
             componentDefinition.setAttribute("condition", "1==1");
             parser = new ChainParser(componentDefinition, FilterProcessor.class);
-        } else if (name.equals("action")) {
+        } else if (name.equalsIgnoreCase("action")) {
             parser = new ActionParser(componentDefinition);
-        } else if (name.equals("processor")) {
+        } else if (name.equalsIgnoreCase("processor")) {
             String componentName = componentDefinition.getAttribute("component");
             componentDefinition.setName(componentName);
-            if (componentName.equals("mapping")) {
+            if (componentName.equalsIgnoreCase("mapping")) {
                 parser = new NormalParser(componentDefinition, Mapping.class);
-            } else if (componentName.equals("http")) {
+            } else if (componentName.equalsIgnoreCase("http")) {
                 parser = new NormalParser(componentDefinition, HttpTransporter.class);
-            } else if (componentName.equals("splitter")) {
+            } else if (componentName.equalsIgnoreCase("splitter")) {
                 parser = new ChainParser(componentDefinition, SplitterProcessor.class);
             }
             //...

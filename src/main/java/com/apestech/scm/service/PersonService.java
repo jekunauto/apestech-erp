@@ -72,7 +72,7 @@ public class PersonService {
     public OapResponse send(SimpleRequest request) {
 
         List<Map> rows = new ArrayList();
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 100000; i++) {
             Map row = new HashedMap();
             row.put("body", i);
             rows.add(row);

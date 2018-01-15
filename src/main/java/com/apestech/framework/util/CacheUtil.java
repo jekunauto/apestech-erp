@@ -94,6 +94,7 @@ public class CacheUtil {
         row.put("key", key);
         row.put("period", Long.valueOf(period));
         row.put("date", new Date());
+        row.put("isRunning", false);
         row.put("topicThreadExecutor", Executors.newSingleThreadExecutor());
     }
 

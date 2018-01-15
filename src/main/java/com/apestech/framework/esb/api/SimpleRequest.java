@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.apestech.framework.util.Tools;
 import com.apestech.oap.AbstractRopRequest;
 import org.springframework.util.Assert;
-import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -96,17 +95,51 @@ public class SimpleRequest extends AbstractRopRequest implements Request {
     @Override
     public <T> T getO(Class<T> type) {
         Object o = getJ();
-        if (o instanceof Map) {
-            return Tools.map(o, type);
-        } else if (o instanceof List) {
-            List rows = new ArrayList();
-            for (Map row : (List<Map>) o) {
-                rows.add(Tools.map(row, type));
+        Assert.isTrue(o instanceof Map, "调用方法：getO() 错误，数据类型错误。");
+        return Tools.map(o, type);
+    }
+
+    @Override
+    public <T> T getO(String key, Class<T> type) {
+        Object o = get(key);
+        Assert.isTrue(o instanceof Map, "调用方法：getO() 错误，数据类型错误。");
+        return Tools.map(o, type);
+    }
+
+    @Override
+    public List getA(Class type) {
+        return getA(type, true);
+    }
+
+    @Override
+    public List getA(Class type, boolean isNest) {
+        Object o = getJ();
+        Assert.isTrue(o instanceof List, "调用方法：getA() 错误，数据类型错误。");
+        return getList((List<Map>) o, type, isNest);
+    }
+
+    @Override
+    public List getA(String key, Class type) {
+        return getA(key, type, true);
+    }
+
+    @Override
+    public List getA(String key, Class type, boolean isNest) {
+        Object o = get(key);
+        Assert.isTrue(o instanceof List, "调用方法：getA() 错误，数据类型错误。");
+        return getList((List<Map>) o, type, isNest);
+    }
+
+    private List getList(List<Map> o, Class type, boolean isNest) {
+        List rows = new ArrayList();
+        for (Map row : o) {
+            if(isNest){
+                rows.add(Tools.map(row, type)); //数据类型需要一致
+            } else {
+                rows.add(Tools.toBean(type, row)); //数据类型可以不一致
             }
-            return (T) rows;
-        } else {
-            throw new RuntimeException("调用方法：getO() 错误，数据类型错误。");
         }
+        return rows;
     }
 
 }

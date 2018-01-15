@@ -98,7 +98,7 @@ public class Tools {
 //        }
 //    }
 
-    @Deprecated
+    //@Deprecated
     public static <T> T toBean(Class<?> type, Map<String, ? extends Object> row){
         try {
             T bean = (T) type.newInstance();
@@ -126,7 +126,7 @@ public class Tools {
      * @param dest   现将要设置新值的对象
      * @param source 源数据对象
      */
-    @Deprecated
+    //@Deprecated
     public static <T> void beanConvert(T dest, T source) {
         try {
             BeanUtils.copyProperties(dest, source);

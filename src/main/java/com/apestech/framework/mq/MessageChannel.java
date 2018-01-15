@@ -3,10 +3,7 @@ package com.apestech.framework.mq;
 import com.apestech.framework.event.Listener;
 import com.apestech.framework.mq.domain.MQueue;
 import com.apestech.framework.mq.store.MQStoreService;
-import com.apestech.framework.util.CacheUtil;
-import com.apestech.framework.util.DateUtil;
-import com.apestech.framework.util.LockUtil;
-import com.apestech.framework.util.SpringManager;
+import com.apestech.framework.util.*;
 import com.apestech.oap.ServiceRouter;
 import com.apestech.oap.event.RopEventMulticaster;
 import org.apache.log4j.Logger;
@@ -57,48 +54,52 @@ public class MessageChannel implements Channel {
         if (!CacheUtil.isRunTopic(topic)) return;
         final Map row = CacheUtil.getTopic(topic);
         if (row == null) return;
-        ExecutorService topicThreadExecutor = (ExecutorService) row.get("topicThreadExecutor");
-        topicThreadExecutor.execute(new Runnable() {
-            public void run() {
-                try {
-                    invoke(topic);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            private void invoke(String topic) {
-                storeService.invoke(topic, new Publisher() {
-
-                    @Override
-                    public void send(MQueue message) {
-                        publish(message);
+        if ((Boolean) row.get("isRunning")) return;
+        try {
+            row.put("isRunning", true);
+            ExecutorService topicThreadExecutor = (ExecutorService) row.get("topicThreadExecutor");
+            topicThreadExecutor.execute(new Runnable() {
+                public void run() {
+                    try {
+                        invoke(topic);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                });
-            }
-        });
+                }
+
+                private void invoke(String topic) {
+                    storeService.invoke(topic, new Publisher() {
+                        @Override
+                        public void send(MQueue message) {
+                            publish(message);
+                        }
+                    });
+                }
+            });
+        } finally {
+            row.put("isRunning", false);
+        }
     }
 
     @Override
     public void publish(MQueue message) {
         Lock lock = lockUtil.getLocalLock(message.getTopic());
-        lock.lock();// 得到锁
+        lock.lock(); //得到锁
         try {
+            boolean isNew = false;
             if (message.getState() == 0) {
+                isNew = true;
                 message = storeService.save(message);
             }
-            ServiceRouter serviceRouter = getServiceRouter();
-            RopEventMulticaster multicaster = serviceRouter.getRopContext().getEventMulticaster();
-            MQEvent event = new MQEvent(this, serviceRouter.getRopContext(), message);
-            multicaster.multicastEvent(event);
+            MQEvent event = new MQEvent(this, RopUtil.getServiceRouter().getRopContext(), message);
+            if (isNew) {
+                EventUtil.multicastEvent(event);
+            } else {
+                onRopEvent(event);
+            }
         } finally {
-            lock.unlock();// 释放锁
+            lock.unlock(); //释放锁
         }
-    }
-
-    private ServiceRouter getServiceRouter() {
-        Object routers = SpringManager.getBean(ServiceRouter.class);
-        return (ServiceRouter) ((Map) routers).get("router");
     }
 
     /**

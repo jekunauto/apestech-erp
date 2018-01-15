@@ -20,27 +20,29 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 功能：EsbEvent Listener
+ *
+ * @author xul
+ * @create 2017-12-05 14:05
+ */
 public class EsbEventListener implements RopEventListener<AfterStartedRopEvent> {
     protected final Logger logger = Logger.getLogger(getClass());
 
     public void onRopEvent(AfterStartedRopEvent ropRopEvent) {
         if (logger.isDebugEnabled()) {
             logger.debug("开始解析Mapping配置文件...");
-            logger.debug((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
         }
         new JKConfig().init();
         if (logger.isDebugEnabled()) {
-            logger.debug((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
             logger.debug("完成解析Mapping配置文件...");
         }
 
         if (logger.isDebugEnabled()) {
             logger.debug("开始解析Esb配置文件...");
-            logger.debug((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
         }
         new EsbFileParser().init();
         if (logger.isDebugEnabled()) {
-            logger.debug((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
             logger.debug("完成解析Esb配置文件...");
         }
 
@@ -102,7 +104,7 @@ public class EsbEventListener implements RopEventListener<AfterStartedRopEvent> 
     }
 
     private ServiceMethodDefinition buildServiceMethodDefinition(ComponentDefinition componentDefinition) {
-        ServiceMethodDefinition definition = Tools.toBean(ServiceMethodDefinition.class, componentDefinition.getAttributes());
+        ServiceMethodDefinition definition = Tools.map(componentDefinition.getAttributes(), ServiceMethodDefinition.class);
         definition.setHttpAction(new HttpAction[]{HttpAction.GET, HttpAction.POST});
         return definition;
     }

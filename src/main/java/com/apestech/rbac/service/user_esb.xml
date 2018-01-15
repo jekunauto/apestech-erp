@@ -18,4 +18,11 @@
         <processor component="mapping" configKey="aut.user.bindPost"/>
         <action component="userService" method="bindPost"/>
     </chain>
+
+
+    <chain method="aut.user.findAll" version="1.0" ignoreSign="true" needInSession="false" isTransaction="true" description="查询动态参数测试">
+        <processor component="mapping" configKey="aut.user.findAll"/>
+        <!--<action component="userService" method="findAll"/>-->
+        <action component="userService" method="findUser"/>
+    </chain>
 </root>

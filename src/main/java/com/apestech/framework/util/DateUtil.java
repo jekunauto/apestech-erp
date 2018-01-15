@@ -12,6 +12,12 @@ import java.util.Date;
  */
 public class DateUtil {
 
+    public static final String DATETIME_FORMAT = "yyyyMMddHHmmss";
+    public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATETIME_FORMAT);
+    public static final String DATE_FORMAT = "yyyyMMdd";
+    public static final String SHOW_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String SHOW_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String SHOW_DATETIME_MILLI_FORMAT = "yyyy-MM-dd HH:mm:ss:SSS";
 
     /**
      *
@@ -49,7 +55,7 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         try {
             sdate = strToDateStr(sdate);
-            calendar.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(sdate));
+            calendar.setTime(new SimpleDateFormat(SHOW_DATE_FORMAT).parse(sdate));
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -62,7 +68,7 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         try {
             sdate = strToDateStr(sdate);
-            calendar.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sdate));
+            calendar.setTime(new SimpleDateFormat(SHOW_DATETIME_FORMAT).parse(sdate));
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -70,8 +76,13 @@ public class DateUtil {
         return new java.sql.Timestamp(calendar.getTimeInMillis());
     }
 
+    public static String timeStampToString(Long timeStamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat(SHOW_DATETIME_MILLI_FORMAT);
+        return String.valueOf(sdf.format(new Date(timeStamp)));
+    }
+
     public static String formatTime(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat(SHOW_DATETIME_MILLI_FORMAT);
         return String.valueOf(sdf.format(new Date()));
     }
 }

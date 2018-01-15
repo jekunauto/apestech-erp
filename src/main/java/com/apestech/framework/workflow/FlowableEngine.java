@@ -58,7 +58,7 @@ public class FlowableEngine implements WorkflowEngine {
         TaskService taskService = engine.getTaskService();
         // 部署流程文件
 //        repositoryService.createDeployment()
-//                .addClasspathResource("processes/one-task-process.test.bpmn20.xml").deploy();
+//                .addClasspathResource("processes/one-task-process.test.bpmn20.xml.bak").deploy();
         // 启动流程
         runtimeService.startProcessInstanceByKey("one-test1");
         // 查询第一个任务

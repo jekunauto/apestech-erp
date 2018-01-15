@@ -2,6 +2,7 @@ package com.apestech.rop.statistics;
 
 import com.alibaba.fastjson.JSON;
 import com.apestech.framework.event.Listener;
+import com.apestech.framework.util.DateUtil;
 import com.apestech.framework.util.NetUtil;
 import com.apestech.oap.event.AfterDoServiceEvent;
 
@@ -41,8 +42,8 @@ public class AfterDoServiceListener implements RopEventListener<AfterDoServiceEv
         statistics.setAppKey(ropEvent.getRopRequestContext().getAppKey());
         statistics.setSessionId(ropEvent.getRopRequestContext().getSessionId());
         statistics.setIp(ropEvent.getRopRequestContext().getIp());
-        statistics.setBeginTime(timeStampToString(ropEvent.getServiceBeginTime()));
-        statistics.setEndTime(timeStampToString(ropEvent.getServiceEndTime()));
+        statistics.setBeginTime(DateUtil.timeStampToString(ropEvent.getServiceBeginTime()));
+        statistics.setEndTime(DateUtil.timeStampToString(ropEvent.getServiceEndTime()));
         statistics.setTime(ropEvent.getServiceEndTime() - ropEvent.getServiceBeginTime());
         statistics.setRequest(JSON.toJSONString(ropEvent.getRopRequestContext().getAllParams()));
         statistics.setResponse(JSON.toJSONString(ropEvent.getRopRequestContext().getRopResponse()));
@@ -57,10 +58,6 @@ public class AfterDoServiceListener implements RopEventListener<AfterDoServiceEv
         repository.save(statistics);
     }
 
-    private String timeStampToString(Long timeStamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-        return String.valueOf(sdf.format(new Date(timeStamp)));
-    }
 
     /**
      * 执行的顺序号

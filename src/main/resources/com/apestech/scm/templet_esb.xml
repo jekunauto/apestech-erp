@@ -42,7 +42,7 @@
         <processor component="mapping" configKey="demo.action"/>
         <producer topic="demo.topic01" description="主题01"/>
         <consumer topic="demo.topic01" isTransaction="true" isBackup="false" period="10">
-            <action component="userService" method="send"/>
+            <action component="personService" method="send"/>
             <processor component="splitter">
                 <producer topic="demo.topic02" description="主题02"/>
             </processor>
@@ -52,7 +52,5 @@
     <consumer topic="demo.topic02" isTransaction="true" isBackup="true" period="2">
     </consumer>
 
-    <consumer topic="demo.topic04" isTransaction="true" isBackup="false" period="2">
 
-    </consumer>
 </root>

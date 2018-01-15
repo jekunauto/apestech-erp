@@ -106,7 +106,7 @@ public class Mapping<T extends Request, R> extends AbstractConverter<T, R> {
             return target;
         }
         try {
-            return Tools.toBean(Class.forName(config.getClassName()), target);
+            return Tools.map(target, Class.forName(config.getClassName()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -41,7 +41,7 @@ public class MQStoreService {
         return repository.save(message);
     }
 
-    public MQueue findOne(String id){
+    public MQueue findOne(String id) {
         QueueRepository repository = SpringManager.getBean("queueRepository");
         return repository.findOne(id);
     }
@@ -59,7 +59,7 @@ public class MQStoreService {
         repository.save(mqb);
     }
 
-    public List<String> getTopics(){
+    public List<String> getTopics() {
         List<String> topics = template.getCollection(CONST_COLLECTION_NAME).distinct("topic");
         return topics != null ? topics : new ArrayList<String>();
     }
@@ -70,7 +70,6 @@ public class MQStoreService {
 
         DBObject ref = new BasicDBObject();
         ref.put("topic", topic);
-//        ref.put("state", 1); //使用分布式锁后，可以放开控制
         BasicDBObject bo = new BasicDBObject();
         bo.put("$lte", maxEnded);
         ref.put("ended", bo);
@@ -78,15 +77,13 @@ public class MQStoreService {
 
         int size = getSize();
         int lastSize = size;
-        int i = 0;
         while (lastSize == size) {
             Query query = new BasicQuery(ref).with(sort).limit(size); //.skip(i * size)
             List<MQueue> messages = template.find(query, MQueue.class);
             lastSize = messages.size();
-            for (MQueue message: messages){
+            for (MQueue message : messages) {
                 publisher.send(message);
             }
-            i++;
         }
     }
 
@@ -101,11 +98,10 @@ public class MQStoreService {
     private String getMaxEnded(String topic) {
         DBObject ref = new BasicDBObject();
         ref.put("topic", topic);
-//        ref.put("state", 1); //使用分布式锁后，可以放开控制
         Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "ended"));
         Query query = new BasicQuery(ref).with(sort).limit(1);
         MQueue result = template.findOne(query, MQueue.class);
-        if(result == null) return null;
+        if (result == null) return null;
         return result.getEnded();
     }
 

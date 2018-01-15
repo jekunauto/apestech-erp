@@ -5,7 +5,7 @@ import com.apestech.framework.esb.processor.ChainProcessor;
 import com.apestech.framework.util.Tools;
 
 /**
- * 功能：SubChain组件解析器
+ * 功能：Normal组件解析器
  *
  * @author xul
  * @create 2017-12-04 10:32
@@ -13,7 +13,7 @@ import com.apestech.framework.util.Tools;
 public class NormalParser implements Parser<ChainProcessor> {
 
     private ComponentDefinition componentDefinition;
-    private Class processorClazz;
+    private Class<ChainProcessor> processorClazz;
 
     public NormalParser(ComponentDefinition componentDefinition, Class processorClazz) {
         this.componentDefinition = componentDefinition;
@@ -22,7 +22,7 @@ public class NormalParser implements Parser<ChainProcessor> {
 
     @Override
     public ChainProcessor parse() {
-        ChainProcessor processor = Tools.toBean(this.processorClazz, componentDefinition.getAttributes());
+        ChainProcessor processor = Tools.map(componentDefinition.getAttributes(), this.processorClazz);
         return processor;
     }
 

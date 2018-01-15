@@ -26,8 +26,8 @@
             upload-file-max-size="10"
             upload-file-types="png,gif"
             core-pool-size="200"
-            max-pool-size="500"
-            queue-capacity="10000"
+            max-pool-size="5000"
+            queue-capacity="5000"
             keep-alive-seconds="300"
             sign-enable="true"/>
 
