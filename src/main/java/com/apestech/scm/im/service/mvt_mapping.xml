@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <config id="aut.user.save" description="创建用户">
+        <field attrname="name" allownull="N" name="用户名"/>
+        <field attrname="userId" allownull="N" name="用户ID"/>
+        <field attrname="password" allownull="N" name="密码（明文）"/>
+    </config>
+
+    <config id="aut.user.login" description="用户登陆">
+        <field attrname="userId" allownull="N" name="用户ID"/>
+        <field attrname="password" allownull="N" name="密码（明文）"/>
+    </config>
+
+    <config id="aut.user.bindPost" description="绑定岗位">
+        <field attrname="postId" allownull="N" fieldtype="int" name="岗位ID"/>
+    </config>
+
+    <config id="aut.user.findAll" description="查询动态参数测试">
+        <nested id="condition">
+            <field attrname="field" allownull="N" name="字段名称"/>
+            <field attrname="operator" allownull="N" name="操作"/>
+            <field attrname="value" allownull="Y" name="值"/>
+        </nested>
+    </config>
+</root>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <chain method="im.mvt.save" version="1.0" ignoreSign="true" needInSession="false" isTransaction="true" description="移动类型保存">
+        <action component="mvtService" method="save"/>
+    </chain>
+
+</root>

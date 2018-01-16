@@ -13,12 +13,13 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.3.5.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <flowable.version>6.2.1</flowable.version>
     </properties>
 
     <dependencies>
@@ -43,6 +44,18 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+            <version>4.3.13.RELEASE</version>
+        </dependency>
+
         <!-- spring-boot-starter-test：测试模块，包括JUnit、Hamcrest、Mockito -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -66,16 +79,17 @@
         <!--<groupId>org.springframework.boot</groupId>-->
         <!--<artifactId>spring-boot-starter-jetty</artifactId>-->
         <!--</dependency>-->
-        <!-- devtools：是spring boot的一个热部署工具 -->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-devtools</artifactId>-->
-            <!--<optional>true</optional>-->
-        <!--</dependency>-->
         <!-- 添加Spring-Data-JPA的依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- 添加flowable的依赖 -->
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-spring-boot-starter-basic</artifactId>
+            <version>${flowable.version}</version>
         </dependency>
 
         <!-- 添加mongodb的依赖 -->
@@ -109,13 +123,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- 集成Druid数据库连接池和监控 -->
-        <!--<dependency>-->
-        <!--<groupId>com.alibaba</groupId>-->
-        <!--<artifactId>druid-spring-boot-starter</artifactId>-->
-        <!--<version>1.1.5</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
@@ -140,12 +147,6 @@
             <version>1.2.6</version>
         </dependency>
 
-        <!-- mysql驱动 -->
-        <!--<dependency>-->
-        <!--<groupId>mysql</groupId>-->
-        <!--<artifactId>mysql-connector-java</artifactId>-->
-        <!--</dependency>-->
-
         <!-- Oracle驱动 -->
         <dependency>
             <groupId>com.oracle</groupId>
@@ -163,8 +164,8 @@
              新到最新。使用flyway是一种保证处于持续开发或多人并行开发情况下项目
              的数据库（包括本地数据库）保持一致的有效方法。-->
         <!--<dependency>-->
-            <!--<groupId>org.flywaydb</groupId>-->
-            <!--<artifactId>flyway-core</artifactId>-->
+        <!--<groupId>org.flywaydb</groupId>-->
+        <!--<artifactId>flyway-core</artifactId>-->
         <!--</dependency>-->
 
         <!-- XML解析工具：dom4j -->
@@ -296,5 +297,18 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
     </build>
 </project>
